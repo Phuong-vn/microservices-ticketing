@@ -7,8 +7,8 @@ const { json } = bodyParser;
 
 app.use(json());
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+app.get("/api/users/currentuser", (req, res) => {
+  res.send("Current User");
 });
 
 app.listen(port, () => {

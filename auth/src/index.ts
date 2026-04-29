@@ -1,15 +1,19 @@
 import express from "express";
 import bodyParser from "body-parser";
+import { currentUserRouter } from './routes/current-user.ts';
+import { signinRouter } from './routes/signin.ts';
+import { signoutRouter } from './routes/signout.ts';
+import { signupRouter } from './routes/signup.ts';
 
 const app = express();
 const port = 3000;
 const { json } = bodyParser;
 
 app.use(json());
-
-app.get("/api/users/currentuser", (req, res) => {
-  res.send("Current User");
-});
+app.use(currentUserRouter);
+app.use(signinRouter);
+app.use(signoutRouter);
+app.use(signupRouter);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "start": "node --watch --watch-path=src --import ts-node/esm src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -13,7 +13,7 @@
   "dependencies": {
     "@types/express": "^5.0.6",
     "express": "^5.2.1",
-    "ts-node": "^10.9.2",
+    "express-validator": "^7.3.2",
     "typescript": "^6.0.3"
   }
 }

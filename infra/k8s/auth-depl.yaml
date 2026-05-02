@@ -1,4 +1,4 @@
-apiVersion: app/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auth-depl
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: dooffyy/auth
+          image: asia.gcr.io/ticketing-dev-494806/auth
 ---
 apiVersion: v1
 kind: Service
@@ -24,7 +24,7 @@ spec:
   selector:
     app: auth
   ports:
-    name: auth
-    protocol: TCP
-    port: 3000
-    targetPort: 3000
+    - name: auth
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

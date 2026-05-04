@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { validationHandler } from '../middleware/validation-handler.ts';
 import { User } from '../models/user.ts';
 import { UnauthorizedError } from '../errors/index.ts';
-import { JWT_KEY } from '../config.ts';
+import { COOKIE_NAME, JWT_KEY } from '../config.ts';
 import { Password } from '../service/password.ts';
 
 const router = express.Router();
@@ -33,7 +33,7 @@ router.post(
 
     const token = jwt.sign(currentUser, JWT_KEY!);
     req.session = {
-      ticketing_jwt: token,
+      [COOKIE_NAME]: token,
     };
 
     res.status(200).send(currentUser);

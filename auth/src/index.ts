@@ -8,7 +8,7 @@ import { signoutRouter } from './routes/signout.ts';
 import { signupRouter } from './routes/signup.ts';
 import { NotFoundError } from './errors/index.ts';
 import { errorHandler } from './middleware/error-handler.ts';
-import { COOKIE_KEY, JWT_KEY } from './config.ts';
+import { COOKIE_NAME, COOKIE_KEY, JWT_KEY } from './config.ts';
 
 const { json } = bodyParser;
 const port = 3000;
@@ -23,6 +23,7 @@ app.use((_req, _res, next) => {
 app.use(json());
 app.use(
   cookieSession({
+    name: COOKIE_NAME,
     signed: false,
     secure: true,
     keys: [COOKIE_KEY!],

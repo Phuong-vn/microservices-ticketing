@@ -23,7 +23,6 @@ app.use((_req, _res, next) => {
 app.use(json());
 app.use(
   cookieSession({
-    name: 'ticketing_jwt',
     signed: false,
     secure: true,
     keys: [COOKIE_KEY!],

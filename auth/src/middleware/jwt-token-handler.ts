@@ -1,5 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 import { UnauthorizedError } from '../errors/index.ts';
+import { JWT_KEY } from '../config.ts';
 
 interface CurrentUser {
   id: string;
@@ -9,7 +11,7 @@ interface CurrentUser {
 declare global {
   namespace Express {
     interface Request {
-      currentUser?: CurrentUser;
+      currentUser?: CurrentUser | null;
     }
   }
 }
@@ -22,9 +24,11 @@ export const jwtTokenHandler = (
   if (!req.session?.jwt) {
     throw new UnauthorizedError();
   }
-  req.currentUser = {
-    id: 'id',
-    email: 'email',
-  };
+  try {
+    const verifiedUser = jwt.verify(req.session.jwt, JWT_KEY!) as CurrentUser;
+    req.currentUser = verifiedUser;
+  } catch (error) {
+    req.currentUser = null;
+  }
   next();
 };

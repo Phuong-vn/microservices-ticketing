@@ -15,6 +15,9 @@ spec:
       containers:
         - name: auth
           image: asia.gcr.io/ticketing-dev-494806/auth
+          envFrom:
+            - secretRef:
+                name: ticketing
 ---
 apiVersion: v1
 kind: Service

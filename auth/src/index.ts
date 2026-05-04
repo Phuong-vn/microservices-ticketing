@@ -8,18 +8,25 @@ import { signoutRouter } from './routes/signout.ts';
 import { signupRouter } from './routes/signup.ts';
 import { NotFoundError } from './errors/index.ts';
 import { errorHandler } from './middleware/error-handler.ts';
+import { COOKIE_KEY, JWT_KEY } from './config.ts';
 
 const { json } = bodyParser;
 const port = 3000;
 const app = express();
 app.set('trust proxy', true);
+app.use((_req, _res, next) => {
+  if (!COOKIE_KEY || !JWT_KEY) {
+    throw new Error('No key available');
+  }
+  next();
+});
 app.use(json());
 app.use(
   cookieSession({
     name: 'ticketing_jwt',
     signed: false,
     secure: true,
-    keys: ['cookie_key'],
+    keys: [COOKIE_KEY!],
   }),
 );
 app.use(currentUserRouter);

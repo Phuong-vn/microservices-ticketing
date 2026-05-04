@@ -1,9 +1,11 @@
 import express from 'express';
 import type { Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
+import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
-import { RequestValidationError, BadRequestError } from '../errors/index.ts';
+import { BadRequestError } from '../errors/index.ts';
 import { User } from '../models/user.ts';
+import { JWT_KEY } from '../config.ts';
+import { validationHandler } from '../middleware/validation-handler.ts';
 
 const router = express.Router();
 
@@ -15,12 +17,8 @@ router.post(
       .isLength({ min: 4, max: 20 })
       .withMessage('password must have 4-20 characters'),
   ],
+  validationHandler,
   async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      throw new RequestValidationError(errors.array());
-    }
-
     const { email, password } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -30,8 +28,7 @@ router.post(
     const user = User.build({ email, password });
     await user.save();
 
-    const token = jwt.sign({ id: user._id, email: user.email }, 'jwtKey');
-    console.log(token);
+    const token = jwt.sign({ id: user._id, email: user.email }, JWT_KEY!);
     req.session = {
       jwt: token,
     };

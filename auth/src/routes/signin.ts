@@ -14,7 +14,7 @@ router.post(
   '/api/users/signin',
   [
     body('email').isEmail().withMessage('invalid email type'),
-    body('password').trim().isLength({ min: 1 }).withMessage('required'),
+    body('password').trim().notEmpty().withMessage('required'),
   ],
   validationHandler,
   async (req: Request, res: Response) => {

@@ -26,7 +26,7 @@ router.post(
     const user = User.build({ email, password });
     await user.save();
 
-    res.status(201).send({
+    return res.status(201).send({
       id: user._id,
       email: user.email,
     });

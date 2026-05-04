@@ -36,7 +36,7 @@ router.post(
       [COOKIE_NAME]: token,
     };
 
-    res.status(200).send(currentUser);
+    return res.send(currentUser);
   },
 );
 

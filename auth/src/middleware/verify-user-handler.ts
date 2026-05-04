@@ -1,6 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { UnauthorizedError } from '../errors/index.ts';
 import { COOKIE_NAME, JWT_KEY } from '../config.ts';
 
 interface CurrentUser {
@@ -23,7 +22,8 @@ export const verifyUserHandler = (
 ) => {
   const token = req.session?.[COOKIE_NAME];
   if (!token) {
-    throw new UnauthorizedError();
+    req.currentUser = null;
+    return next();
   }
   try {
     const verifiedUser = jwt.verify(token, JWT_KEY!) as CurrentUser;

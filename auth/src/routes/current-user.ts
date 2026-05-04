@@ -7,9 +7,8 @@ const router = express.Router();
 router.get(
   '/api/users/currentuser',
   verifyUserHandler,
-  currentUserHandler,
   (req, res) => {
-    return res.status(200).send(req.currentUser);
+    return res.send({ currentUser: req.currentUser });
   },
 );
 

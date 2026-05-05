@@ -3,7 +3,6 @@ import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
-import { afterAll, beforeAll, beforeEach } from '@jest/globals';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -23,6 +22,6 @@ beforeEach(async () => {
 });
 
 afterAll(async () => {
-  await mongo.stop()
+  await mongo?.stop()
   await mongoose.connection.close();
 });

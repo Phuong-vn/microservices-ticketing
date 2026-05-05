@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { app } from '../../app.ts';
-import { it } from '@jest/globals';
 
 it('return 201 on success signup', async () => {
   await request(app)
@@ -10,4 +9,41 @@ it('return 201 on success signup', async () => {
       password: 'password',
     })
     .expect(201);
+});
+
+it('return 400 on wrong email or password', async () => {
+  await request(app)
+    .post('/api/users/signup')
+    .send({
+      email: 'test',
+      password: 'password',
+    })
+    .expect(400);
+
+  await request(app)
+    .post('/api/users/signup')
+    .send({
+      email: 'test@test.com',
+      password: 'pad',
+    })
+    .expect(400);
+});
+
+
+it('return 400 on signup existing user', async () => {
+  await request(app)
+    .post('/api/users/signup')
+    .send({
+      email: 'test@test.com',
+      password: 'password',
+    })
+    .expect(201);
+
+  await request(app)
+    .post('/api/users/signup')
+    .send({
+      email: 'test@test.com',
+      password: 'password',
+    })
+    .expect(400);
 });

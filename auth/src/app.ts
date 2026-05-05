@@ -23,7 +23,7 @@ app.use(
   cookieSession({
     name: COOKIE_NAME,
     signed: false,
-    secure: process.env.NODE_ENV !== 'test',
+    secure: true,
     keys: [COOKIE_KEY!],
   }),
 );

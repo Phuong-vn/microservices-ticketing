@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node --watch --watch-path=src --import ts-node/esm src/index.ts",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --no-cache --runInBand --detectOpenHandles"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll --no-cache"
   },
   "jest": {
     "preset": "ts-jest",

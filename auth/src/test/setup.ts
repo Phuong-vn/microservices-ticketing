@@ -1,6 +1,13 @@
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { afterAll, beforeAll, beforeEach } from '@jest/globals';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenv.config({ path: resolve(__dirname, '..', '..', '..', '.env') });
 
 let mongo: MongoMemoryServer;
 

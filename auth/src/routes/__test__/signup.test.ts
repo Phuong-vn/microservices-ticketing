@@ -30,7 +30,6 @@ it('return 400 on wrong email or password', async () => {
     .expect(400);
 });
 
-
 it('return 400 on signup existing user', async () => {
   await request(app)
     .post('/api/users/signup')

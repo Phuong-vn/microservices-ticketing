@@ -4,13 +4,7 @@ import { app } from '../../app.ts';
 let cookie: string[] | undefined;
 
 beforeEach(async () => {
-  const user = {
-    email: 'test@test.com',
-    password: 'password',
-  };
-  await request(app).post('/api/users/signup').send(user);
-  const response = await request(app).post('/api/users/signin').send(user);
-  cookie = response.get('Set-Cookie');
+  cookie = await global.signin();
 });
 
 it('return 200 and success getting user information', async () => {

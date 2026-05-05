@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node --watch --watch-path=src --import ts-node/esm src/index.ts",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --no-cache --runInBand --detectOpenHandles"
+    "test": "node --env-file=../.env --experimental-vm-modules node_modules/jest/bin/jest.js --no-cache --runInBand --detectOpenHandles"
   },
   "jest": {
     "preset": "ts-jest",
@@ -36,7 +36,6 @@
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/supertest": "^7.2.0",
-    "dotenv": "^17.4.2",
     "jest": "^30.3.0",
     "mongodb-memory-server": "^11.1.0",
     "supertest": "^7.2.2",

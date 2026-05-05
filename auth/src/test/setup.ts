@@ -1,14 +1,13 @@
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-dotenv.config({ path: resolve(__dirname, '..', '..', '..', '.env') });
+import request from 'supertest';
+import { app } from '../app.ts';
 
 let mongo: MongoMemoryServer;
+
+declare global {
+  var signin: () => Promise<string[]>;
+}
 
 beforeAll(async () => {
   mongo = await MongoMemoryServer.create();
@@ -25,3 +24,17 @@ afterAll(async () => {
   await mongo?.stop();
   await mongoose.connection.close();
 });
+
+global.signin = async () => {
+  const user = {
+    email: 'test@test.com',
+    password: 'password',
+  };
+  await request(app).post('/api/users/signup').send(user);
+  const response = await request(app).post('/api/users/signin').send(user);
+  const cookie = response.get('Set-Cookie');
+  if (!cookie) {
+    throw new Error('Expected cookie but got undefined.');
+  }
+  return cookie;
+}

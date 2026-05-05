@@ -2,8 +2,16 @@ import request from 'supertest';
 import { app } from '../../app.ts';
 import { COOKIE_NAME } from '../../config.ts';
 
+let cookie: string[] | undefined;
+
 beforeEach(async () => {
-  await global.signin();
+  const user = {
+    email: 'test@test.com',
+    password: 'password',
+  };
+  await request(app).post('/api/users/signup').send(user);
+  const response = await request(app).post('/api/users/signin').send(user);
+  cookie = response.get('Set-Cookie');
 });
 
 it('clear the cookie after success signing out', async () => {

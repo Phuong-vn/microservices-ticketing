@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { app } from '../../app.ts';
-import { it } from '@jest/globals';
 
 it('return 201 on success signup', async () => {
   await request(app)

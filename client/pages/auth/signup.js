@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useRequest from '../../hooks/use-request';
 
-export default () => {
+const AuthSignup = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -56,3 +56,5 @@ export default () => {
     </form>
   );
 };
+
+export default AuthSignup;

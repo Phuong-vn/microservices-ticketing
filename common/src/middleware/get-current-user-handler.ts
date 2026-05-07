@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { COOKIE_NAME, JWT_KEY } from '../config.ts';
+import { COOKIE_NAME, JWT_KEY } from '../config.js';
 
 interface CurrentUser {
   id: string;
@@ -16,7 +16,7 @@ declare global {
 }
 
 export const getCurrentUserHandler = (
-  req: Request,
+  req: Request & { session?: Record<string, string> },
   _res: Response,
   next: NextFunction,
 ) => {

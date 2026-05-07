@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { UnauthorizedError } from '../errors/index.ts';
+import { UnauthorizedError } from '../errors/index.js';
 
 export const requireAuthHandler = (
   req: Request,

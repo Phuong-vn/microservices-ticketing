@@ -11,7 +11,7 @@ declare global {
   namespace Express {
     interface Request {
       currentUser?: CurrentUser | null;
-      session?: Record<string, string>;
+      session?: Record<string, string> | null;
     }
   }
 }

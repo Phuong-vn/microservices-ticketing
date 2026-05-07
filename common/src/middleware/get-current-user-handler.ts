@@ -11,16 +11,17 @@ declare global {
   namespace Express {
     interface Request {
       currentUser?: CurrentUser | null;
+      session?: Record<string, string>;
     }
   }
 }
 
 export const getCurrentUserHandler = (
-  req: Request & { session?: Record<string, string> },
+  req: Request,
   _res: Response,
   next: NextFunction,
 ) => {
-  const token = req.session?.[COOKIE_NAME];
+  const token = COOKIE_NAME && req.session?.[COOKIE_NAME];
   if (!token) {
     req.currentUser = null;
     return next();

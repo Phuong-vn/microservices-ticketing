@@ -5,8 +5,7 @@ import { currentUserRouter } from './routes/current-user.ts';
 import { signinRouter } from './routes/signin.ts';
 import { signoutRouter } from './routes/signout.ts';
 import { signupRouter } from './routes/signup.ts';
-import { NotFoundError } from './errors/index.ts';
-import { errorHandler } from './middleware/error-handler.ts';
+import { NotFoundError, errorHandler } from '@doffy-gittix/common';
 import { COOKIE_NAME, COOKIE_KEY, JWT_KEY } from './config.ts';
 
 const { json } = bodyParser;

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getCurrentUserHandler } from '../middleware/get-current-user-handler.ts';
+import { getCurrentUserHandler } from '@doffy-gittix/common';
 
 const router = express.Router();
 

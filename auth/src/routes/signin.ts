@@ -2,9 +2,8 @@ import express from 'express';
 import type { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
-import { validationHandler } from '../middleware/validation-handler.ts';
+import { validationHandler, UnauthorizedError } from '@doffy-gittix/common';
 import { User } from '../models/user.ts';
-import { UnauthorizedError } from '../errors/index.ts';
 import { COOKIE_NAME, JWT_KEY } from '../config.ts';
 import { Password } from '../service/password.ts';
 
@@ -32,9 +31,11 @@ router.post(
     const currentUser = { id: user._id, email: user.email };
 
     const token = jwt.sign(currentUser, JWT_KEY!);
-    req.session = {
-      [COOKIE_NAME]: token,
-    };
+    if (COOKIE_NAME) {
+      req.session = {
+        [COOKIE_NAME]: token,
+      };
+    }
 
     return res.send(currentUser);
   },

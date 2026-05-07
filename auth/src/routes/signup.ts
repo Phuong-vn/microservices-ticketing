@@ -1,9 +1,8 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import { body } from 'express-validator';
-import { BadRequestError } from '../errors/index.ts';
+import { BadRequestError, validationHandler } from '@doffy-gittix/common';
 import { User } from '../models/user.ts';
-import { validationHandler } from '../middleware/validation-handler.ts';
 
 const router = express.Router();
 

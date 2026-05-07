@@ -1,10 +1,11 @@
 {
   "name": "@doffy-gittix/common",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "./build/index.js",
   "scripts": {
-    "build": "del-cli build && tsc"
+    "build": "del-cli build && tsc",
+    "pub": "npm version patch && git add . && git commit -m \"[upd] common\" && git push && npm publish"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ticket-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ticket
+  template:
+    metadata:
+      labels:
+        app: ticket
+    spec:
+      containers:
+        - name: ticket
+          image: asia.gcr.io/ticketing-dev-494806/ticket
+          envFrom:
+            - secretRef:
+                name: ticketing
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ticket-srv
+spec:
+  selector:
+    app: ticket
+  ports:
+    - name: ticket
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ticket-mongodb-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ticket-mongo
+  template:
+    metadata:
+      labels:
+        app: ticket-mongo
+    spec:
+      containers:
+        - name: ticket
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ticket-mongo-srv
+spec:
+  selector:
+    app: ticket-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

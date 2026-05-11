@@ -43,8 +43,13 @@ ClientApp.getInitialProps = async (context) => {
   const pageProps = {};
 
   const client = buildClient(context.ctx);
-  const { data } = await client.get('/api/users/currentuser', context.ctx);
-  pageProps.currentUser = data.currentUser;
+  try {
+    const { data } = await client.get('/api/users/currentuser', context.ctx);
+    pageProps.currentUser = data.currentUser;
+  } catch (error) {
+    console.error(error.response.data);
+    console.error(error.response.status);
+  }
 
   return { ctx, pageProps };
 };

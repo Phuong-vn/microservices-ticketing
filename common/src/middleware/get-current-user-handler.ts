@@ -38,13 +38,15 @@ const getCurrentUserHandler = (
 };
 
 export const useCurrentUserHandler = (
-  config: Record<string, string>,
+  config: {
+    cookieName: string,
+    jwtKey: string,
+  },
 ) => {
-  const { COOKIE_NAME, JWT_KEY } = config;
-  if (!COOKIE_NAME || !JWT_KEY) {
+  if (!config.cookieName || !config.jwtKey) {
     throw new Error('config required');
   }
-  cookieName = COOKIE_NAME;
-  jwtKey = JWT_KEY;
+  cookieName = config.cookieName;
+  jwtKey = config.jwtKey;
   return getCurrentUserHandler;
 };

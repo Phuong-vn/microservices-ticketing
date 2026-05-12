@@ -1,15 +1,11 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import { body } from 'express-validator';
-import { validationHandler, useCurrentUserHandler, requireAuthHandler } from '@doffy-gittix/common';
+import { validationHandler } from '@doffy-gittix/common';
 import { Ticket } from '../models/ticket.ts';
-import { COOKIE_NAME, JWT_KEY } from '../config.ts';
+import { checkAuthHandler } from '../middleware/checkAuthHandler.ts';
 
 const router = express.Router();
-const getCurrentUserHandler = useCurrentUserHandler({
-  cookieName: COOKIE_NAME,
-  jwtKey: JWT_KEY,
-});
 
 router.post(
   '/api/tickets',
@@ -18,8 +14,7 @@ router.post(
     body('price').trim().notEmpty().withMessage('required'),
   ],
   validationHandler,
-  getCurrentUserHandler,
-  requireAuthHandler,
+  checkAuthHandler,
   async (req: Request, res: Response) => {
     const { title, price } = req.body;
     const ticket = Ticket.build({

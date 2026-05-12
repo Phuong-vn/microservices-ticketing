@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { Ticket } from '../models/ticket.ts';
 import { NotFoundError, validationHandler } from '@doffy-gittix/common';
+import { checkAuthHandler } from '../middleware/checkAuthHandler.ts';
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.put(
     body('price').trim().notEmpty().withMessage('required'),
   ],
   validationHandler,
+  checkAuthHandler,
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const { title, price } = req.body;

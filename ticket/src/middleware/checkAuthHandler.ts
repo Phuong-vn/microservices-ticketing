@@ -7,6 +7,4 @@ const getCurrentUserHandler = useCurrentUserHandler({
   jwtKey: JWT_KEY,
 });
 
-export const checkAuthHandler = (req: Request, res: Response, next: NextFunction) => {
-  return getCurrentUserHandler(req, res, next);
-};
+export const checkAuthHandler = [getCurrentUserHandler, requireAuthHandler];

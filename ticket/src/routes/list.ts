@@ -6,7 +6,13 @@ const router = express.Router();
 
 router.get('/api/tickets', async (_req: Request, res: Response) => {
   const tickets = await Ticket.find();
-  return res.send(tickets);
+  return res.send(
+    tickets.map(({ _id, title, price }) => ({
+      id: _id,
+      title,
+      price,
+    })),
+  );
 });
 
 export { router as listRouter };

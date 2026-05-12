@@ -8,6 +8,7 @@ import buildClient from '../api/build-client';
 const ClientApp = ({ Component, pageProps }) => {
   const { currentUser } = pageProps;
   const navLinks = [
+    { label: 'Ticket', href: '/ticket' },
     !currentUser && { label: 'Sign up', href: '/auth/signup' },
     !currentUser && { label: 'Sign in', href: '/auth/signin' },
     currentUser && { label: 'Sign out', href: '/auth/signout' },
@@ -31,7 +32,7 @@ const ClientApp = ({ Component, pageProps }) => {
         </h1>
         <ul className="list-group list-group-horizontal">{navLinks}</ul>
       </header>
-      <div className="container">
+      <div className="container pt-4">
         <Component {...pageProps} />
       </div>
     </>

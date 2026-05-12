@@ -18,17 +18,18 @@ router.put(
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const { title, price } = req.body;
-    const ticket = await Ticket.findByIdAndUpdate(id, {
-      title,
-      price,
-    });
-    if (!ticket) {
+    const updated = await Ticket.findByIdAndUpdate(
+      id,
+      { title, price },
+      { new: true },
+    );
+    if (!updated) {
       throw new NotFoundError();
     }
     return res.send({
-      id: ticket._id,
-      title: ticket.title,
-      price: ticket.price,
+      id: updated._id,
+      title: updated.title,
+      price: updated.price,
     });
   },
 );

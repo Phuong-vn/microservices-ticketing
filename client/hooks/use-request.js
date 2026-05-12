@@ -7,6 +7,7 @@ export default ({ method, path, body, onSuccess }) => {
   const [errorBlock, setErrorBlock] = useState(null);
 
   const fetchRequest = async () => {
+    setErrorBlock(null);
     try {
       const response = await axios[method](path, body);
       if (onSuccess) {

@@ -11,14 +11,18 @@ const stan = nats.connect('ticketing', randomUUID(), {
 stan.on('connect', () => {
   console.log('listener connected');
 
-  const opts = stan.subscriptionOptions().setManualAckMode(true);
+  const opts = stan
+    .subscriptionOptions()
+    .setManualAckMode(true)
+    .setDeliverAllAvailable()
+    .setDurableName('durable-name');
+
   const subscription = stan.subscribe('ticket:created', 'my-queue-group', opts);
   subscription.on('message', (msg: Message) => {
     console.log(msg.getSequence());
     console.log(msg.getData());
     msg.ack();
   });
-
 });
 
 stan.on('close', () => {

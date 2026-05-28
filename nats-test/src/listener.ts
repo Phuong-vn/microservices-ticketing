@@ -1,5 +1,5 @@
 import nats from 'node-nats-streaming';
-import type { Message } from 'node-nats-streaming';
+import { TicketCreatedListener } from './events/listener.ts';
 import { randomUUID } from 'crypto';
 
 console.clear();
@@ -10,19 +10,7 @@ const stan = nats.connect('ticketing', randomUUID(), {
 
 stan.on('connect', () => {
   console.log('listener connected');
-
-  const opts = stan
-    .subscriptionOptions()
-    .setManualAckMode(true)
-    .setDeliverAllAvailable()
-    .setDurableName('durable-name');
-
-  const subscription = stan.subscribe('ticket:created', 'my-queue-group', opts);
-  subscription.on('message', (msg: Message) => {
-    console.log(msg.getSequence());
-    console.log(msg.getData());
-    msg.ack();
-  });
+  new TicketCreatedListener(stan).listen();
 });
 
 stan.on('close', () => {

@@ -1,24 +1,6 @@
 import type { Stan, Message } from 'node-nats-streaming';
-
-enum Subject {
-  TicketCreated = 'ticket:created',
-  OrderUpdated = 'order:updated',
-}
-
-type Data = {
-  [Subject.TicketCreated]: {
-    id: string;
-    title: string;
-    price: string;
-  },
-  [Subject.OrderUpdated]: {
-    id: string,
-    userId: string,
-    ticketId: string,
-  },
-}
-
-const QUEUE_GROUP_NAME = 'payments-service';
+import { Subject } from './subject.ts';
+import type { Data  } from './subject.ts';
 
 abstract class Listener<T extends Subject> {
   private client: Stan;
@@ -65,7 +47,7 @@ abstract class Listener<T extends Subject> {
 
 export class TicketCreatedListener extends Listener<Subject.TicketCreated> {
   readonly subject = Subject.TicketCreated;
-  queueGroupName = QUEUE_GROUP_NAME;
+  queueGroupName = 'payments-service';
   onMessage = (data: Data[Subject.TicketCreated], msg: Message) => {
     console.log(data);
     msg.ack();
@@ -74,7 +56,7 @@ export class TicketCreatedListener extends Listener<Subject.TicketCreated> {
 
 export class OrderUpdatedListener extends Listener<Subject.OrderUpdated> {
   readonly subject = Subject.OrderUpdated;
-  queueGroupName = QUEUE_GROUP_NAME;
+  queueGroupName = 'tickets-service';
   onMessage = (data: Data[Subject.OrderUpdated], msg: Message) => {
     console.log(data);
     msg.ack();

@@ -8,12 +8,10 @@ const stan = nats.connect('ticketing', randomUUID(), {
   url: 'http://localhost:4222'
 });
 
-stan.on('connect', () => {
-  const data = {
+stan.on('connect', async () => {
+  await new TicketCreatedPublisher(stan).publish({
     id: '1',
     title: 'title',
     price: '20'
-  };
-
-  new TicketCreatedPublisher(stan).publish(data);
+  });
 });

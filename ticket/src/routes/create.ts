@@ -4,6 +4,8 @@ import { body } from 'express-validator';
 import { validationHandler } from '@doffy-gittix/common';
 import { Ticket } from '../models/ticket.ts';
 import { checkAuthHandler } from '../middleware/checkAuthHandler.ts';
+import { natsWrapper } from '../natsWrapper.ts';
+import { TicketCreatedPublisher } from '../nats/publisher.ts';
 
 const router = express.Router();
 
@@ -20,8 +22,17 @@ router.post(
     const ticket = Ticket.build({
       title,
       price,
+      userId: req.currentUser!.id
     });
     await ticket.save();
+
+    new TicketCreatedPublisher(natsWrapper.client).publish({
+      id: ticket._id.toString(),
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+    });
+
     return res.send({
       id: ticket._id,
       title: ticket.title,

@@ -4,3 +4,6 @@ export class TicketCreatedPublisher extends Publisher<Subject.TicketCreated> {
   readonly subject = Subject.TicketCreated;
 }
 
+export class TicketUpdatedPublisher extends Publisher<Subject.TicketUpdated> {
+  readonly subject = Subject.TicketUpdated;
+}

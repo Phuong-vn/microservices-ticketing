@@ -4,6 +4,8 @@ import { body } from 'express-validator';
 import { Ticket } from '../models/ticket.ts';
 import { NotFoundError, validationHandler } from '@doffy-gittix/common';
 import { checkAuthHandler } from '../middleware/checkAuthHandler.ts';
+import { natsWrapper } from '../natsWrapper.ts';
+import { TicketUpdatedPublisher } from '../nats/publisher.ts';
 
 const router = express.Router();
 
@@ -26,6 +28,14 @@ router.put(
     if (!updated) {
       throw new NotFoundError();
     }
+
+    await new TicketUpdatedPublisher(natsWrapper.client).publish({
+      id: updated._id.toString(),
+      title: updated.title,
+      price: updated.price,
+      userId: updated.userId,
+    });
+
     return res.send({
       id: updated._id,
       title: updated.title,

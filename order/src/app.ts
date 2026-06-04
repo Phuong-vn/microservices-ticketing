@@ -3,6 +3,10 @@ import bodyParser from 'body-parser';
 import cookieSession from 'cookie-session';
 import { NotFoundError, errorHandler } from '@doffy-gittix/common';
 import { COOKIE_NAME, COOKIE_KEY, JWT_KEY } from './config.ts';
+import { createRouter } from './routes/create.ts';
+import { listRouter } from './routes/list.ts';
+import { detailsRouter } from './routes/details.ts';
+import { deleteRouter } from './routes/delete.ts';
 
 const { json } = bodyParser;
 const app = express();
@@ -22,6 +26,10 @@ app.use(
     keys: [COOKIE_KEY!],
   }),
 );
+app.use(createRouter);
+app.use(listRouter);
+app.use(detailsRouter);
+app.use(deleteRouter);
 app.all('*any', () => {
   throw new NotFoundError();
 });

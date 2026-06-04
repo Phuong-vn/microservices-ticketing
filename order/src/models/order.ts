@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 interface OrderAttrs {
   userId: string;
-  ticket: string;
+  ticketId: string;
 }
 
 interface OrderModel extends mongoose.Model<OrderDoc> {
@@ -11,7 +11,7 @@ interface OrderModel extends mongoose.Model<OrderDoc> {
 
 interface OrderDoc extends mongoose.Document {
   userId: string;
-  ticket: string;
+  ticketId: string;
 }
 
 const orderSchema = new mongoose.Schema({
@@ -19,7 +19,7 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  ticket: {
+  ticketId: {
     type: String,
     required: true,
   },

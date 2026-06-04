@@ -11,29 +11,27 @@ const router = express.Router();
 
 router.post(
   '/api/orders',
-  [
-    body('ticketId').trim().notEmpty().withMessage('required'),
-  ],
+  [body('ticketId').trim().notEmpty().withMessage('required')],
   validationHandler,
   checkAuthHandler,
   async (req: Request, res: Response) => {
     const { ticketId } = req.body;
     const order = Order.build({
       userId: req.currentUser!.id,
-      ticketId: ticketId
+      ticketId: ticketId,
     });
     await order.save();
 
     await new OrderCreatedPublisher(natsWrapper.client).publish({
       id: order._id.toString(),
       userId: order.userId,
-      ticketId: order.ticketId
+      ticketId: order.ticketId,
     });
 
     return res.send({
       id: order._id,
       userId: order.userId,
-      ticketId: order.ticketId
+      ticketId: order.ticketId,
     });
   },
 );

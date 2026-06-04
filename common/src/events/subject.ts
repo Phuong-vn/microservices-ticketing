@@ -1,7 +1,7 @@
 export enum Subject {
   TicketCreated = 'ticket:created',
   TicketUpdated = 'ticket:updated',
-  OrderUpdated = 'order:updated',
+  OrderCreated = 'order:created',
 }
 
 export type Data = {
@@ -17,7 +17,7 @@ export type Data = {
     price: string;
     userId: string;
   },
-  [Subject.OrderUpdated]: {
+  [Subject.OrderCreated]: {
     id: string,
     userId: string,
     ticketId: string,

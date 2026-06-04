@@ -11,12 +11,12 @@ const router = express.Router();
 
 router.put(
   '/api/tickets/:id',
+  checkAuthHandler,
   [
     body('title').trim().notEmpty().withMessage('required'),
     body('price').trim().notEmpty().withMessage('required'),
   ],
   validationHandler,
-  checkAuthHandler,
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const { title, price } = req.body;

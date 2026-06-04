@@ -11,9 +11,9 @@ const router = express.Router();
 
 router.post(
   '/api/orders',
+  checkAuthHandler,
   [body('ticketId').trim().notEmpty().withMessage('required')],
   validationHandler,
-  checkAuthHandler,
   async (req: Request, res: Response) => {
     const { ticketId } = req.body;
     const order = Order.build({

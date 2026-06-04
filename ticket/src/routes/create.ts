@@ -11,12 +11,12 @@ const router = express.Router();
 
 router.post(
   '/api/tickets',
+  checkAuthHandler,
   [
     body('title').trim().notEmpty().withMessage('required'),
     body('price').trim().notEmpty().withMessage('required'),
   ],
   validationHandler,
-  checkAuthHandler,
   async (req: Request, res: Response) => {
     const { title, price } = req.body;
     const ticket = Ticket.build({

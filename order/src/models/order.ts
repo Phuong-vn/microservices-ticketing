@@ -1,17 +1,23 @@
 import mongoose from 'mongoose';
+import { OrderStatus } from '@doffy-gittix/common';
+import type { TicketDoc } from './ticket.ts';
 
 interface OrderAttrs {
   userId: string;
-  ticketId: string;
+  status: OrderStatus;
+  expiredAt: string;
+  ticket: TicketDoc;
 }
 
 interface OrderModel extends mongoose.Model<OrderDoc> {
-  build(attrs: OrderAttrs): OrderDoc
+  build(attrs: OrderAttrs): OrderDoc;
 }
 
 interface OrderDoc extends mongoose.Document {
   userId: string;
-  ticketId: string;
+  status: OrderStatus;
+  expiredAt: string;
+  ticket: TicketDoc;
 }
 
 const orderSchema = new mongoose.Schema({
@@ -19,9 +25,17 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  ticketId: {
+  status: {
     type: String,
     required: true,
+    enum: Object.values(OrderStatus),
+  },
+  expiredAt: {
+    type: mongoose.Schema.Types.Date,
+  },
+  ticket: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Ticket',
   },
 });
 

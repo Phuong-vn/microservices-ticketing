@@ -1,11 +1,16 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import { body } from 'express-validator';
-import { validationHandler } from '@doffy-gittix/common';
-import { Order } from '../models/order.ts';
+import {
+  validationHandler,
+  OrderStatus,
+  NotFoundError,
+  BadRequestError,
+} from '@doffy-gittix/common';
+import { Order, Ticket } from '../models/index.ts';
 import { checkAuthHandler } from '../middleware/checkAuthHandler.ts';
-import { natsWrapper } from '../natsWrapper.ts';
-import { OrderCreatedPublisher } from '../nats/publisher.ts';
+// import { natsWrapper } from '../natsWrapper.ts';
+// import { OrderCreatedPublisher } from '../nats/publisher.ts';
 
 const router = express.Router();
 
@@ -16,22 +21,32 @@ router.post(
   validationHandler,
   async (req: Request, res: Response) => {
     const { ticketId } = req.body;
+    const ticket = await Ticket.findById(ticketId);
+    if (!ticket) {
+      throw new NotFoundError();
+    }
+
+    const isReserved = await ticket.isReserved();
+    if (isReserved) {
+      throw new BadRequestError('existed order');
+    }
+
+    const expiredAt = performance.now() + 15 * 1000 * 60; // next 15 mins
     const order = Order.build({
       userId: req.currentUser!.id,
-      ticketId: ticketId,
+      status: OrderStatus.Created,
+      expiredAt: JSON.stringify(expiredAt),
+      ticket,
     });
     await order.save();
 
-    await new OrderCreatedPublisher(natsWrapper.client).publish({
-      id: order._id.toString(),
-      userId: order.userId,
-      ticketId: order.ticketId,
-    });
+    // order created publisher
 
     return res.send({
       id: order._id,
       userId: order.userId,
-      ticketId: order.ticketId,
+      status: order.status,
+      expiredAt: order.expiredAt,
     });
   },
 );

@@ -9,8 +9,8 @@ import {
 } from '@doffy-gittix/common';
 import { Order, Ticket } from '../models/index.ts';
 import { checkAuthHandler } from '../middleware/checkAuthHandler.ts';
-// import { natsWrapper } from '../natsWrapper.ts';
-// import { OrderCreatedPublisher } from '../nats/publisher.ts';
+import { natsWrapper } from '../natsWrapper.ts';
+import { OrderCreatedPublisher } from '../nats/publisher.ts';
 
 const router = express.Router();
 
@@ -40,7 +40,16 @@ router.post(
     });
     await order.save();
 
-    // order created publisher
+    await new OrderCreatedPublisher(natsWrapper.client).publish({
+      id: order._id.toString(),
+      userId: order.userId,
+      status: order.status,
+      expiredAt: order.expiredAt.toISOString(),
+      ticket: {
+        id: ticket._id.toString(),
+        price: ticket.price,
+      },
+    });
 
     return res.status(201).send({
       id: order._id,

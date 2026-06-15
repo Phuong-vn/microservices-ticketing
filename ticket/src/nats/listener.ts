@@ -1,6 +1,6 @@
 import { Listener, Subject, NotFoundError } from '@doffy-gittix/common';
 import type { Data } from '@doffy-gittix/common';
-import { Message } from 'node-nats-streaming';
+import type { Message } from 'node-nats-streaming';
 import { QUEUE_GROUP_NAME } from '../config.ts';
 import { Ticket } from '../models/index.ts';
 import { TicketUpdatedPublisher } from './publisher.ts';

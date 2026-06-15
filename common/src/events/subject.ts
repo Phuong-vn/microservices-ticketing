@@ -11,13 +11,13 @@ export type Data = {
   [Subject.TicketCreated]: {
     id: string;
     title: string;
-    price: string;
+    price: number;
     userId: string;
   },
   [Subject.TicketUpdated]: {
     id: string;
     title: string;
-    price: string;
+    price: number;
     userId: string;
   },
   [Subject.OrderCreated]: {

@@ -31,18 +31,18 @@ router.post(
       throw new BadRequestError('existed order');
     }
 
-    const expiredAt = performance.now() + 15 * 1000 * 60; // next 15 mins
+    const expiredAt = new Date(performance.now() + 15 * 1000 * 60); // next 15 mins
     const order = Order.build({
       userId: req.currentUser!.id,
       status: OrderStatus.Created,
-      expiredAt: JSON.stringify(expiredAt),
+      expiredAt,
       ticket,
     });
     await order.save();
 
     // order created publisher
 
-    return res.send({
+    return res.status(201).send({
       id: order._id,
       userId: order.userId,
       status: order.status,

@@ -8,14 +8,15 @@ const router = express.Router();
 router.get(
   '/api/orders',
   checkAuthHandler,
-  async (_req: Request, res: Response) => {
-    const orders = await Order.find();
-    const formatOrders = orders.map(({ _id, userId, ticketId }) => ({
+  async (req: Request, res: Response) => {
+    const userId = req.currentUser!.id;
+    const orders = await Order.find({ userId }).populate('ticket');
+    const formattedOrders = orders.map(({ _id, userId, ticket }) => ({
       id: _id,
       userId,
-      ticketId,
+      ticket,
     }));
-    return res.send(formatOrders);
+    return res.send(formattedOrders);
   },
 );
 

@@ -5,7 +5,7 @@ import type { TicketDoc } from './ticket.ts';
 interface OrderAttrs {
   userId: string;
   status: OrderStatus;
-  expiredAt: string;
+  expiredAt: Date;
   ticket: TicketDoc;
 }
 
@@ -16,7 +16,7 @@ interface OrderModel extends mongoose.Model<OrderDoc> {
 interface OrderDoc extends mongoose.Document {
   userId: string;
   status: OrderStatus;
-  expiredAt: string;
+  expiredAt: Date;
   ticket: TicketDoc;
 }
 

@@ -21,15 +21,19 @@ export type Data = {
     userId: string;
   },
   [Subject.OrderCreated]: {
-    id: string,
-    userId: string,
-    status: OrderStatus,
-    ticketId: string,
+    id: string;
+    userId: string;
+    status: OrderStatus;
+    createdAt: string;
+    ticket: {
+      id: string;
+      price: number;
+    };
   },
   [Subject.OrderCancelled]: {
-    id: string,
-    userId: string,
-    status: OrderStatus,
-    ticketId: string,
+    id: string;
+    ticket: {
+      id: string;
+    };
   },
 }

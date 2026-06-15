@@ -11,6 +11,7 @@ interface TicketAttrs {
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc;
+  findByEventData(data: { id: string, version: number }): Promise<TicketDoc | null>;
 }
 
 export interface TicketDoc extends mongoose.Document {
@@ -38,6 +39,12 @@ ticketSchema.statics.build = ({ id, ...rest }: TicketAttrs) => {
   return new Ticket({
     _id: id,
     ...rest,
+  });
+};
+ticketSchema.statics.findByEventData = ({ id, version }: { id: string, version: number }) => {
+  return Ticket.findOne({
+    _id: id,
+    version: version - 1,
   });
 };
 ticketSchema.methods.isReserved = async function () {

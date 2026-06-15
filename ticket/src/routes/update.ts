@@ -2,7 +2,12 @@ import express from 'express';
 import type { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { Ticket } from '../models/index.ts';
-import { NotFoundError, validationHandler } from '@doffy-gittix/common';
+import {
+  NotFoundError,
+  validationHandler,
+  UnauthorizedError,
+  BadRequestError,
+} from '@doffy-gittix/common';
 import { checkAuthHandler } from '../middleware/checkAuthHandler.ts';
 import { natsWrapper } from '../natsWrapper.ts';
 import { TicketUpdatedPublisher } from '../nats/publisher.ts';
@@ -27,6 +32,12 @@ router.put(
     );
     if (!updated) {
       throw new NotFoundError();
+    }
+    if (req.currentUser!.id !== updated.userId) {
+      throw new UnauthorizedError();
+    }
+    if (updated.orderId) {
+      throw new BadRequestError('can not update reserved ticket');
     }
 
     await new TicketUpdatedPublisher(natsWrapper.client).publish({

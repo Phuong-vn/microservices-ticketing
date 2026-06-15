@@ -1,6 +1,6 @@
 import express from 'express';
 import type { Request, Response } from 'express';
-import { Ticket } from '../models/ticket.ts';
+import { Ticket } from '../models/index.ts';
 
 const router = express.Router();
 

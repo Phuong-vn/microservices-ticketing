@@ -1,7 +1,7 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import { body } from 'express-validator';
-import { Ticket } from '../models/ticket.ts';
+import { Ticket } from '../models/index.ts';
 import { NotFoundError, validationHandler } from '@doffy-gittix/common';
 import { checkAuthHandler } from '../middleware/checkAuthHandler.ts';
 import { natsWrapper } from '../natsWrapper.ts';
@@ -32,7 +32,8 @@ router.put(
     await new TicketUpdatedPublisher(natsWrapper.client).publish({
       id: updated._id.toString(),
       title: updated.title,
-      price: updated.price,
+      version: updated.version,
+      price: Number(updated.price),
       userId: updated.userId,
     });
 

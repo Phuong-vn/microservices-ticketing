@@ -2,7 +2,7 @@ import express from 'express';
 import type { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { validationHandler } from '@doffy-gittix/common';
-import { Ticket } from '../models/ticket.ts';
+import { Ticket } from '../models/index.ts';
 import { checkAuthHandler } from '../middleware/checkAuthHandler.ts';
 import { natsWrapper } from '../natsWrapper.ts';
 import { TicketCreatedPublisher } from '../nats/publisher.ts';
@@ -29,7 +29,8 @@ router.post(
     await new TicketCreatedPublisher(natsWrapper.client).publish({
       id: ticket._id.toString(),
       title: ticket.title,
-      price: ticket.price,
+      price: Number(ticket.price),
+      version: ticket.version,
       userId: ticket.userId,
     });
 

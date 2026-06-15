@@ -24,7 +24,7 @@ export type Data = {
     id: string;
     userId: string;
     status: OrderStatus;
-    createdAt: string;
+    expiredAt: string;
     ticket: {
       id: string;
       price: number;

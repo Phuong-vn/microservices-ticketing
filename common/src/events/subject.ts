@@ -13,18 +13,21 @@ export type Data = {
     title: string;
     price: number;
     userId: string;
+    version: number;
   },
   [Subject.TicketUpdated]: {
     id: string;
     title: string;
     price: number;
     userId: string;
+    version: number;
   },
   [Subject.OrderCreated]: {
     id: string;
     userId: string;
     status: OrderStatus;
     expiredAt: string;
+    version: number;
     ticket: {
       id: string;
       price: number;
@@ -32,6 +35,7 @@ export type Data = {
   },
   [Subject.OrderCancelled]: {
     id: string;
+    version: number;
     ticket: {
       id: string;
     };

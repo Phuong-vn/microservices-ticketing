@@ -3,7 +3,7 @@ import { Subject } from './subject.ts';
 import type { Data  } from './subject.ts';
 
 export abstract class Listener<T extends Subject> {
-  private client: Stan;
+  protected client: Stan;
   abstract subject: T;
   abstract queueGroupName: string;
   abstract onMessage: (data: Data[T], msg: Message) => void;

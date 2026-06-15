@@ -3,7 +3,7 @@ import { Subject } from './subject.ts';
 import type { Data } from './subject.ts';
 
 export abstract class Publisher<T extends Subject> {
-  private client: Stan;
+  protected client: Stan;
   abstract subject: T;
 
   constructor(client: Stan) {

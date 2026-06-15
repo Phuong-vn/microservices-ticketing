@@ -14,6 +14,7 @@ export type Data = {
     price: number;
     userId: string;
     version: number;
+    orderId?: string;
   },
   [Subject.TicketUpdated]: {
     id: string;
@@ -21,6 +22,7 @@ export type Data = {
     price: number;
     userId: string;
     version: number;
+    orderId?: string;
   },
   [Subject.OrderCreated]: {
     id: string;

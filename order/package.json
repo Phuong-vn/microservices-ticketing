@@ -21,7 +21,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@doffy-gittix/common": "^1.0.21",
+    "@doffy-gittix/common": "^1.0.22",
     "@types/cookie-session": "^2.0.49",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",

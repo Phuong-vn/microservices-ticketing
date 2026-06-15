@@ -3,6 +3,7 @@ import { Order } from './index.ts';
 import { OrderStatus } from '@doffy-gittix/common';
 
 interface TicketAttrs {
+  id: string;
   title: string;
   price: number;
 }
@@ -28,8 +29,11 @@ const ticketSchema = new mongoose.Schema({
   },
 });
 
-ticketSchema.statics.build = (attrs: TicketAttrs) => {
-  return new Ticket(attrs);
+ticketSchema.statics.build = ({ id, ...rest }: TicketAttrs) => {
+  return new Ticket({
+    _id: id,
+    ...rest,
+  });
 };
 ticketSchema.methods.isReserved = async function () {
   const existingOrder = await Order.findOne({

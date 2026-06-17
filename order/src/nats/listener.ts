@@ -1,8 +1,14 @@
-import { Subject, Listener, NotFoundError, OrderStatus } from '@doffy-gittix/common';
+import {
+  Subject,
+  Listener,
+  NotFoundError,
+  OrderStatus,
+} from '@doffy-gittix/common';
 import type { Data } from '@doffy-gittix/common';
 import type { Message } from 'node-nats-streaming';
 import { QUEUE_GROUP_NAME } from '../config.ts';
 import { Order, Ticket } from '../models/index.ts';
+import { OrderCancelledPublisher } from './publisher.ts';
 
 export class TicketCreatedListener extends Listener<Subject.TicketCreated> {
   readonly subject = Subject.TicketCreated;
@@ -34,12 +40,19 @@ export class ExpirationCompleteListener extends Listener<Subject.ExpirationCompl
   readonly subject = Subject.ExpirationComplete;
   queueGroupName = QUEUE_GROUP_NAME;
   onMessage = async (data: Data[Subject.ExpirationComplete], msg: Message) => {
-    const order = await Order.findById(data.id);
+    const order = await Order.findById(data.id).populate('ticket');
     if (!order) {
       throw new NotFoundError();
     }
     order.status = OrderStatus.Cancelled;
-    order.save();
+    await order.save();
+    await new OrderCancelledPublisher(this.client).publish({
+      id: order.id,
+      version: order.version,
+      ticket: {
+        id: order.ticket._id.toString(),
+      },
+    });
     msg.ack();
   };
 }

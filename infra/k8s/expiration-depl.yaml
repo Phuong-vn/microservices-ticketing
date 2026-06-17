@@ -24,6 +24,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: REDIS_HOST
+              value: expiration-redis-srv
           envFrom:
             - secretRef:
                 name: ticketing
@@ -43,7 +45,7 @@ spec:
         app: expiration-redis
     spec:
       containers:
-        - name: expiration
+        - name: expiration-redis
           image: redis
 ---
 apiVersion: v1

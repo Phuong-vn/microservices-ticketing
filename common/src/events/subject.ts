@@ -5,7 +5,7 @@ export enum Subject {
   TicketUpdated = 'ticket:updated',
   OrderCreated = 'order:created',
   OrderCancelled = 'order:cancelled',
-  OrderExpired = 'order:expired',
+  ExpirationComplete = 'expiration:complete',
 }
 
 export type Data = {
@@ -43,7 +43,7 @@ export type Data = {
       id: string;
     };
   },
-  [Subject.OrderExpired]: {
+  [Subject.ExpirationComplete]: {
     id: string;
   },
 }

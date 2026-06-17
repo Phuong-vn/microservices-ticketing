@@ -21,7 +21,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@doffy-gittix/common": "^1.0.26",
+    "@doffy-gittix/common": "^1.0.28",
     "@types/bull": "^3.15.9",
     "@types/node": "^25.9.3",
     "bull": "^4.16.5",

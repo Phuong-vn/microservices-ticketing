@@ -1,8 +1,8 @@
-import { Subject, Listener, NotFoundError } from '@doffy-gittix/common';
+import { Subject, Listener, NotFoundError, OrderStatus } from '@doffy-gittix/common';
 import type { Data } from '@doffy-gittix/common';
 import type { Message } from 'node-nats-streaming';
 import { QUEUE_GROUP_NAME } from '../config.ts';
-import { Ticket } from '../models/index.ts';
+import { Order, Ticket } from '../models/index.ts';
 
 export class TicketCreatedListener extends Listener<Subject.TicketCreated> {
   readonly subject = Subject.TicketCreated;
@@ -26,6 +26,20 @@ export class TicketUpdatedListener extends Listener<Subject.TicketUpdated> {
     const { title, price } = data;
     ticket.set({ title, price });
     await ticket.save();
+    msg.ack();
+  };
+}
+
+export class ExpirationCompleteListener extends Listener<Subject.ExpirationComplete> {
+  readonly subject = Subject.ExpirationComplete;
+  queueGroupName = QUEUE_GROUP_NAME;
+  onMessage = async (data: Data[Subject.ExpirationComplete], msg: Message) => {
+    const order = await Order.findById(data.id);
+    if (!order) {
+      throw new NotFoundError();
+    }
+    order.status = OrderStatus.Cancelled;
+    order.save();
     msg.ack();
   };
 }

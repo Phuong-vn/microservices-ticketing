@@ -1,0 +1,31 @@
+{
+  "name": "expiration",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --watch --watch-path=src --import ts-node/esm src/index.ts"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "./src/test/setup.ts"
+    ],
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@doffy-gittix/common": "^1.0.26",
+    "@types/node": "^25.9.3",
+    "bull": "^4.16.5",
+    "node-nats-streaming": "^0.3.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  }
+}

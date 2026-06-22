@@ -44,6 +44,9 @@ export class ExpirationCompleteListener extends Listener<Subject.ExpirationCompl
     if (!order) {
       throw new NotFoundError();
     }
+    if (order.status === OrderStatus.Complete) {
+      return msg.ack();
+    }
     order.status = OrderStatus.Cancelled;
     await order.save();
     await new OrderCancelledPublisher(this.client).publish({
@@ -53,6 +56,20 @@ export class ExpirationCompleteListener extends Listener<Subject.ExpirationCompl
         id: order.ticket._id.toString(),
       },
     });
+    msg.ack();
+  };
+}
+
+export class PaymentCompleteListener extends Listener<Subject.PaymentComplete> {
+  readonly subject = Subject.PaymentComplete;
+  queueGroupName = QUEUE_GROUP_NAME;
+  onMessage = async (data: Data[Subject.PaymentComplete], msg: Message) => {
+    const order = await Order.findById(data.orderId);
+    if (!order) {
+      throw new NotFoundError();
+    }
+    order.status = OrderStatus.Complete;
+    await order.save();
     msg.ack();
   };
 }

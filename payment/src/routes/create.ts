@@ -53,6 +53,7 @@ router.post(
     await payment.save();
     await new PaymentCompletePublisher(natsWrapper.client).publish({
       id: payment._id.toString(),
+      orderId: order.id
     });
 
     return res.send(confirmedPaymentIntent);

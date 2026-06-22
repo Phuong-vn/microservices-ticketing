@@ -6,6 +6,7 @@ import {
   TicketCreatedListener,
   TicketUpdatedListener,
   ExpirationCompleteListener,
+  PaymentCompleteListener,
 } from './nats/listener.ts';
 
 const port = 3000;
@@ -23,6 +24,7 @@ process.on('SIGTERM', () => natsWrapper.client.close());
 new TicketCreatedListener(natsWrapper.client).listen();
 new TicketUpdatedListener(natsWrapper.client).listen();
 new ExpirationCompleteListener(natsWrapper.client).listen();
+new PaymentCompleteListener(natsWrapper.client).listen();
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);

@@ -26,11 +26,11 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  userId: {
+  status: {
     type: String,
     required: true,
   },
-  status: {
+  userId: {
     type: String,
     required: true,
   }

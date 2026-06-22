@@ -1,44 +1,61 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import { body } from 'express-validator';
-import { validationHandler } from '@doffy-gittix/common';
-import { Ticket } from '../models/index.ts';
+import {
+  BadRequestError,
+  NotFoundError,
+  OrderStatus,
+  UnauthorizedError,
+  validationHandler,
+} from '@doffy-gittix/common';
+import { Order, Payment } from '../models/index.ts';
 import { checkAuthHandler } from '../middleware/checkAuthHandler.ts';
+import { stripe } from '../stripe.ts';
+import { PaymentCompletePublisher } from '../nats/publisher.ts';
 import { natsWrapper } from '../natsWrapper.ts';
-import { TicketCreatedPublisher } from '../nats/publisher.ts';
 
 const router = express.Router();
 
 router.post(
-  '/api/tickets',
+  '/api/payments',
   checkAuthHandler,
   [
-    body('title').trim().notEmpty().withMessage('required'),
-    body('price').trim().notEmpty().withMessage('required'),
+    body('token').trim().notEmpty().withMessage('required'),
+    body('orderId').trim().notEmpty().withMessage('required'),
   ],
   validationHandler,
   async (req: Request, res: Response) => {
-    const { title, price } = req.body;
-    const ticket = Ticket.build({
-      title,
-      price,
-      userId: req.currentUser!.id
+    const { token, orderId } = req.body;
+    const order = await Order.findById(orderId);
+    if (!order) {
+      throw new NotFoundError();
+    }
+    if (order.status !== OrderStatus.Created) {
+      throw new BadRequestError('order is not ready to pay');
+    }
+    if (order.userId !== req.currentUser?.id) {
+      throw new UnauthorizedError();
+    }
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: order.price,
+      currency: 'usd',
     });
-    await ticket.save();
+    const confirmedPaymentIntent = await stripe.paymentIntents.confirm(
+      paymentIntent.id,
+      {
+        confirmation_token: token,
+      },
+    );
+    if (confirmedPaymentIntent.status !== 'succeeded') {
+      throw new BadRequestError('fail to confirm payment');
+    }
+    const payment = Payment.build({ orderId, userId: order.userId });
+    await payment.save();
+    await new PaymentCompletePublisher(natsWrapper.client).publish({
+      id: payment._id.toString(),
+    });
 
-    await new TicketCreatedPublisher(natsWrapper.client).publish({
-      id: ticket._id.toString(),
-      title: ticket.title,
-      price: Number(ticket.price),
-      version: ticket.version,
-      userId: ticket.userId,
-    });
-
-    return res.send({
-      id: ticket._id,
-      title: ticket.title,
-      price: ticket.price,
-    });
+    return res.send(confirmedPaymentIntent);
   },
 );
 

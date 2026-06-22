@@ -5,7 +5,7 @@ import {
   OrderStatus,
 } from '@doffy-gittix/common';
 import type { Data } from '@doffy-gittix/common';
-import { Message } from 'node-nats-streaming';
+import type { Message } from 'node-nats-streaming';
 import { QUEUE_GROUP_NAME } from '../config.ts';
 import { Order } from '../models/index.ts';
 

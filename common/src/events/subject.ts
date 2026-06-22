@@ -6,6 +6,7 @@ export enum Subject {
   OrderCreated = 'order:created',
   OrderCancelled = 'order:cancelled',
   ExpirationComplete = 'expiration:complete',
+  PaymentComplete = 'payment:complete',
 }
 
 export type Data = {
@@ -44,6 +45,9 @@ export type Data = {
     };
   },
   [Subject.ExpirationComplete]: {
+    id: string;
+  },
+  [Subject.PaymentComplete]: {
     id: string;
   },
 }

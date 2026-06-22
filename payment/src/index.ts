@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { app } from './app.ts';
 import { natsWrapper } from './natsWrapper.ts';
 import { NATS_CLUSTER_ID, NATS_CLIENT_ID, NATS_URL } from './config.ts';
+import { OrderCreatedListener, OrderCancelledListener } from './nats/listener.ts';
 
 const port = 3000;
 
@@ -14,6 +15,9 @@ natsWrapper.client.on('close', () => {
 });
 process.on('SIGINT', () => natsWrapper.client.close());
 process.on('SIGTERM', () => natsWrapper.client.close());
+
+await new OrderCreatedListener(natsWrapper.client).listen();
+await new OrderCancelledListener(natsWrapper.client).listen();
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
